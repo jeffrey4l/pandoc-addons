@@ -1,5 +1,5 @@
 --
--- Invoke with: pandoc -t md2redmine.lua input.md -o output.redmine
+-- Invoke with: pandoc -t md2tid.lua input.md -o output.tid
 --
 
 local pipe = pandoc.pipe
