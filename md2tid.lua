@@ -1,5 +1,5 @@
 --
--- Invoke with: pandoc -t md2tid.lua input.md -o output.tid
+-- Invoke with: pandoc -t md2redmine.lua input.md -o output.redmine
 --
 
 local pipe = pandoc.pipe
@@ -39,6 +39,13 @@ local function attributes(attr)
     end
   end
   return table.concat(attr_table)
+end
+
+local function get_lang(attr)
+    if attr["class"] ~= nil then
+        return attr["class"]
+    end
+    return ""
 end
 
 -- Table to store footnotes, so they can be included at the end.
@@ -204,7 +211,7 @@ function LineBlock(ls)
 end
 
 function CodeBlock(s, attr)
-    return "```\n" .. s ..  "\n```"
+    return "```" .. get_lang(attr) .. "\n" .. s ..  "\n```"
 end
 
 function BulletList(items)
@@ -234,9 +241,7 @@ function DefinitionList(items)
 end
 
 function CaptionedImage(src, tit, caption, attr)
-   return '<div class="figure">\n<img src="' .. escape(src,true) ..
-      '" title="' .. escape(tit,true) .. '"/>\n' ..
-      '<p class="caption">' .. caption .. '</p>\n</div>'
+  return "[img[".. caption .. "|" .. src .. "]]"
 end
 
 function Table(caption, aligns, widths, headers, rows)
