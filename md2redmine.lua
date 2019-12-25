@@ -29,6 +29,9 @@ local function escape(s, in_attribute)
   return s
 end
 
+local bullets = {}
+local orders = {}
+
 -- Helper function to convert an attributes table into
 -- a string that can be put into HTML tags.
 local function attributes(attr)
@@ -207,19 +210,21 @@ function CodeBlock(s, attr)
     return "<pre><code" .. attributes(attr) .. ">" .. s ..  "\n</code></pre>"
 end
 
-function BulletList(items)
+function BulletList_(items)
   local buffer = {}
   for _, item in pairs(items) do
-    table.insert(buffer, "* " .. item)
+    table.insert(buffer, table.concat(bullets) .. ' ' .. item)
   end
+  table.remove(bullets)
   return table.concat(buffer, "\n")
 end
 
-function OrderedList(items)
+function OrderedList_(items)
   local buffer = {}
   for _, item in pairs(items) do
-    table.insert(buffer, "# " .. item)
+    table.insert(buffer, table.concat(orders) .. " " .. item)
   end
+  table.remove(orders)
   return table.concat(buffer, "\n")
 end
 
@@ -294,6 +299,13 @@ end
 local meta = {}
 meta.__index =
   function(_, key)
+    if key == 'BulletList' then
+        table.insert(bullets, '*')
+        return BulletList_
+    elseif key == 'OrderedList' then
+        table.insert(orders, '#')
+        return OrderedList_
+    end
     io.stderr:write(string.format("WARNING: Undefined function '%s'\n",key))
     return function() return "" end
   end
