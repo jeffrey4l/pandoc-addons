@@ -30,7 +30,6 @@ local function escape(s, in_attribute)
 end
 
 local bullets = {}
-local orders = {}
 
 -- Helper function to convert an attributes table into
 -- a string that can be put into HTML tags.
@@ -56,7 +55,7 @@ local notes = {}
 
 -- Blocksep is used to separate block elements.
 function Blocksep()
-  return "\n\n"
+    return bullets[1] and "\n" or "\n\n"
 end
 
 -- This function is called once for the whole document. Parameters:
@@ -229,9 +228,9 @@ end
 function OrderedList_(items)
   local buffer = {}
   for _, item in pairs(items) do
-    table.insert(buffer, table.concat(orders) .. " " .. item)
+    table.insert(buffer, table.concat(bullets) .. " " .. item)
   end
-  table.remove(orders)
+  table.remove(bullets)
   return table.concat(buffer, "\n")
 end
 
@@ -291,7 +290,7 @@ meta.__index =
         table.insert(bullets, '*')
         return BulletList_
     elseif key == 'OrderedList' then
-        table.insert(orders, '#')
+        table.insert(bullets, '#')
         return OrderedList_
     end
     io.stderr:write(string.format("WARNING: Undefined function '%s'\n",key))
