@@ -213,7 +213,12 @@ function LineBlock(ls)
 end
 
 function CodeBlock(s, attr)
-    return "```" .. get_lang(attr) .. "\n" .. s ..  "\n```"
+    local lang = get_lang(attr)
+    if lang == 'mermaid' then
+        return "<$mermaid text=\"\n" .. s .. "\"></$mermaid>"
+    else
+        return "```" .. get_lang(attr) .. "\n" .. s ..  "\n```"
+    end
 end
 
 function BulletList_(items)
