@@ -184,7 +184,11 @@ function Plain(s)
 end
 
 function Para(s)
-  return s
+  if string.lower(s) == "[toc]" then
+      return "{{toc}}"
+  else
+      return s
+  end
 end
 
 -- lev is an integer, the header level.
