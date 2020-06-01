@@ -191,7 +191,12 @@ function Plain(s)
 end
 
 function Para(s)
-  return s
+  -- tiddlywiki do not support table of content
+  if string.lower(s) == '[toc]' then
+      return ''
+  else
+      return s
+  end
 end
 
 -- lev is an integer, the header level.
