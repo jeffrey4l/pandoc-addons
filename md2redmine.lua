@@ -256,9 +256,8 @@ function html_align(align)
 end
 
 function CaptionedImage(src, tit, caption, attr)
-   return '<div class="figure">\n<img src="' .. escape(src,true) ..
-      '" title="' .. escape(tit,true) .. '"/>\n' ..
-      '<p class="caption">' .. caption .. '</p>\n</div>'
+  -- return "!" .. src.replace(/^\/+/g, '') .. "!"
+  return "!" .. string.gsub(src, '^/', '') .. "!"
 end
 
 -- Caption is a string, aligns is an array of strings,
