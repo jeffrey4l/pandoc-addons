@@ -1,28 +1,29 @@
 --
--- Invoke with: pandoc -t md2redmine.lua input.md -o output.redmine
+-- Invoke with: pandoc -t md2tid.lua input.md -o output.redmine
 --
 
 local pipe = pandoc.pipe
 local stringify = (require "pandoc.utils").stringify
 
--- The global variable PANDOC_DOCUMENT contains the full AST of
--- the document which is going to be written. It can be used to
 -- configure the writer.
-local meta = PANDOC_DOCUMENT.meta
+function Writer(doc, opts)
+  local meta = doc.meta
 
--- Chose the image format based on the value of the
--- `image_format` meta value.
-local image_format = meta.image_format
-  and stringify(meta.image_format)
-  or "png"
-local image_mime_type = ({
-    jpeg = "image/jpeg",
-    jpg = "image/jpeg",
-    gif = "image/gif",
-    png = "image/png",
-    svg = "image/svg+xml",
-  })[image_format]
-  or error("unsupported image format `" .. img_format .. "`")
+  -- Chose the image format based on the value of the
+  -- `image_format` meta value.
+  local image_format = meta.image_format
+    and stringify(meta.image_format)
+    or "png"
+  local image_mime_type = ({
+      jpeg = "image/jpeg",
+      jpg = "image/jpeg",
+      gif = "image/gif",
+      png = "image/png",
+      svg = "image/svg+xml",
+    })[image_format]
+    or error("unsupported image format `" .. img_format .. "`")
+  return pandoc.write_classic(doc, opts)
+end
 
 -- Character escaping
 local function escape(s, in_attribute)
